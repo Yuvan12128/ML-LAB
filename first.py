@@ -21,3 +21,21 @@ print('correlation between x and y=',corr_xy)
 cov_matrix=df.cov()
 print('\n corariance matrix:')
 print(cov_matrix);
+
+Data Set
+-----------
+    X   Y
+0  10  15
+1  20  25
+2  30  35
+3  40  45
+4  50  55
+
+ Convirnce between X and Y = 250.0
+
+ correlation between x and y= 1.0
+
+ corariance matrix:
+       X      Y
+X  250.0  250.0
+Y  250.0  250.0
