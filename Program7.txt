@@ -1,0 +1,117 @@
+import numpy as np
+
+# Input dataset
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+], dtype=float)
+
+# Target output - XOR
+y = np.array([
+    [0],
+    [1],
+    [1],
+    [0]
+], dtype=float)
+
+# Sigmoid activation function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Derivative of sigmoid
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+# Network structure
+input_neurons = 2
+hidden_neurons = 3
+output_neurons = 1
+
+# Learning parameters
+learning_rate = 0.5
+epochs = 10000
+
+# Initialize weights and biases
+np.random.seed(42)
+
+W1 = np.random.uniform(
+    -1, 1,
+    (input_neurons, hidden_neurons)
+)
+
+b1 = np.zeros((1, hidden_neurons))
+
+W2 = np.random.uniform(
+    -1, 1,
+    (hidden_neurons, output_neurons)
+)
+
+b2 = np.zeros((1, output_neurons))
+
+# Training
+for epoch in range(epochs):
+
+    # ---------- Forward Propagation ----------
+    hidden_input = np.dot(X, W1) + b1
+    hidden_output = sigmoid(hidden_input)
+
+    output_input = np.dot(hidden_output, W2) + b2
+    output = sigmoid(output_input)
+
+    # ---------- Backpropagation ----------
+    error = y - output
+
+    output_gradient = (
+        error * sigmoid_derivative(output)
+    )
+
+    hidden_error = np.dot(
+        output_gradient,
+        W2.T
+    )
+
+    hidden_gradient = (
+        hidden_error * sigmoid_derivative(hidden_output)
+    )
+
+    # ---------- Update weights and biases ----------
+    W2 += (
+        np.dot(hidden_output.T, output_gradient)
+        * learning_rate
+    )
+
+    b2 += (
+        np.sum(
+            output_gradient,
+            axis=0,
+            keepdims=True
+        ) * learning_rate
+    )
+
+    W1 += (
+        np.dot(X.T, hidden_gradient)
+        * learning_rate
+    )
+
+    b1 += (
+        np.sum(
+            hidden_gradient,
+            axis=0,
+            keepdims=True
+        ) * learning_rate
+    )
+
+# Display results
+print("Input:")
+print(X.astype(int))
+
+print("\nActual Output:")
+print(y.astype(int))
+
+print("\nPredicted Output:")
+print(output)
+
+print("\nPredicted Class:")
+print((output >= 0.5).astype(int))

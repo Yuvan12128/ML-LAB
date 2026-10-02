@@ -1,0 +1,88 @@
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+
+# Load the Iris dataset
+iris = load_iris()
+
+# Create the DataFrame
+df = pd.DataFrame(iris.data)
+
+# Convert numeric target into class names
+class_names = [
+    "Iris-setosa",
+    "Iris-versicolor",
+    "Iris-virginica"
+]
+
+df[4] = [class_names[i] for i in iris.target]
+
+# Save the dataset without column names
+df.to_csv("Dataset.csv", index=False, header=False)
+
+# KNN Classification
+names = [
+    'sepal-length',
+    'sepal-width',
+    'petal-length',
+    'petal-width',
+    'Class'
+]
+
+# Read the dataset
+dataset = pd.read_csv("Dataset.csv", names=names)
+
+# Separate features and target
+X = dataset.iloc[:, :-1]
+y = dataset.iloc[:, -1]
+
+print(X.head())
+
+# Split the dataset into training and testing data
+Xtrain, Xtest, ytrain, ytest = train_test_split(
+    X,
+    y,
+    test_size=0.05,
+    random_state=0
+)
+
+# Create and train the KNN classifier
+classifier = KNeighborsClassifier(n_neighbors=5)
+classifier.fit(Xtrain, ytrain)
+
+# Predict the test data
+ypred = classifier.predict(Xtest)
+
+# Display Original Label, Predicted Label and Correct/Wrong
+print("\n")
+print("%-25s %-25s %-25s" %
+      ("Original Label", "Predicted Label", "Correct/Wrong"))
+
+print("-" * 75)
+
+for i, label in enumerate(ytest):
+    print("%-25s %-25s" % (label, ypred[i]), end="")
+
+    if label == ypred[i]:
+        print("%-25s" % "Correct")
+    else:
+        print("%-25s" % "Wrong")
+
+print("-" * 75)
+
+# Confusion Matrix
+print("\nConfusion Matrix:\n",
+      metrics.confusion_matrix(ytest, ypred))
+
+# Classification Report
+print("\nClassification Report:\n",
+      metrics.classification_report(ytest, ypred))
+
+# Accuracy
+print(
+    "\nAccuracy of the classifier is %0.2f"
+    % metrics.accuracy_score(ytest, ypred)
+)

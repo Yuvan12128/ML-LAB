@@ -1,0 +1,32 @@
+import numpy as np
+import pandas as pd
+
+# Define the dataset
+data = {
+    'X': [15, 20, 30, 40, 55],
+    'Y': [10, 33, 20, 25, 35]
+}
+
+# Create a DataFrame
+df = pd.DataFrame(data)
+
+print("Dataset:")
+print(df)
+
+# Calculate covariance between X and Y
+cov_xy = np.cov(df['X'], df['Y'])[0, 1]
+print("\nCovariance between X and Y =", cov_xy)
+
+# Calculate correlation between X and Y
+corr_xy = np.corrcoef(df['X'], df['Y'])[0, 1]
+print("Correlation between X and Y =", corr_xy)
+
+# Calculate covariance matrix
+cov_matrix = df.cov()
+print("\nCovariance Matrix:")
+print(cov_matrix)
+
+# Calculate correlation matrix
+corr_matrix = df.corr()
+print("\nCorrelation Matrix:")
+print(corr_matrix)
